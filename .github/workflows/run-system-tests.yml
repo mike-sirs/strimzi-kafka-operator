@@ -21,7 +21,7 @@ on:
       cluster_operator_install_type:
         description: "Install type method used for Strimzi operator"
         required: false
-        default: "bundle"
+        default: "yaml"
         type: string
       strimzi_rbac_scope:
         description: "RBAC configuration for operator access"
@@ -130,13 +130,14 @@ jobs:
         uses: ./.github/actions/install-yq
         with:
           architecture: ${{ matrix.config.arch }}
-      - name: Install Docker
-        uses: ./.github/actions/install-docker
 
       - name: DEBUG - dns utils
         run: |
           sudo apt-get update
           sudo apt-get install -y dnsutils iproute2
+
+      - name: Install Docker
+        uses: ./.github/actions/install-docker
 
 #      - name: Install Minikube
 #        uses: ./.github/actions/setup-minikube
@@ -187,18 +188,7 @@ jobs:
         uses: ./.github/actions/containers-load
         with:
           architecture: ${{ matrix.config.arch }}
-          useMinikube: true
-#        run: |
-#          make java_install
-#          make docker_build
-#          make docker_tag
-#          make docker_push
-#        env:
-#          MVN_ARGS: '-B -DskipTests -Dmaven.javadoc.skip=true'
-
-#      - name: DEBUG - registry v2
-#        run: |
-#          curl -s "$DOCKER_REGISTRY/v2/_catalog"
+          localRegistry: true
 
       - name: Cache local Maven repository
         uses: actions/cache@v4
@@ -230,24 +220,27 @@ jobs:
         # TODO - set Kafka version globally?
         if: ${{ !contains(env.PROFILE, 'upgrade') }}
         run: |
-          eval $(minikube docker-env)
+          export CONNECT_IMAGE="${DOCKER_REGISTRY}/${DOCKER_ORG}/connect-file-sink:latest"
           export KAFKA_VERSION=$([[ "${KAFKA_VERSION}" == *"latest"* ]] && yq eval '.[] | select(.default) | .version' kafka-versions.yaml || echo "${KAFKA_VERSION}")
           BASE_IMAGE="${DOCKER_REGISTRY}/${DOCKER_ORG}/kafka:${DOCKER_TAG}-kafka-${KAFKA_VERSION}"
           echo "Base image: $BASE_IMAGE"
-          eval "$(./systemtest/src/test/resources/connect-build/build-connect-image.sh "$KAFKA_VERSION" "$BASE_IMAGE")"
+          eval "$(./systemtest/src/test/resources/connect-build/build-connect-image.sh "$KAFKA_VERSION" "$BASE_IMAGE" "$CONNECT_IMAGE")"
           echo "connect build image: $CONNECT_IMAGE_WITH_FILE_SINK_PLUGIN"
+          
+          # Push the images
+          docker push ${CONNECT_IMAGE_WITH_FILE_SINK_PLUGIN}
 
           # Provide "connectImage" variable for tests:
           echo "CONNECT_IMAGE_WITH_FILE_SINK_PLUGIN=${CONNECT_IMAGE_WITH_FILE_SINK_PLUGIN}" >> $GITHUB_ENV
 
-      ############################################################################
-      # We need to set DOCKER_REGISTRY to IP and port of service, which is created by minikube registry addon, port is always 80
-      # Default value for PRs is localhost:5000 because we need to push built images into minikube registry and make them available for pods
-      ############################################################################
-      - name: "Set docker_registry to local registry in minikube"
-        if: ${{ contains(env.DOCKER_REGISTRY, 'localhost:5000') }}
-        run: |
-          echo "DOCKER_REGISTRY=$(kubectl get service registry -n kube-system -o=jsonpath='{.spec.clusterIP}'):80" >> $GITHUB_ENV
+#      ############################################################################
+#      # We need to set DOCKER_REGISTRY to IP and port of service, which is created by minikube registry addon, port is always 80
+#      # Default value for PRs is localhost:5000 because we need to push built images into minikube registry and make them available for pods
+#      ############################################################################
+#      - name: "Set docker_registry to local registry in minikube"
+#        if: ${{ contains(env.DOCKER_REGISTRY, 'localhost:5000') }}
+#        run: |
+#          echo "DOCKER_REGISTRY=$(kubectl get service registry -n kube-system -o=jsonpath='{.spec.clusterIP}'):80" >> $GITHUB_ENV
 
       ############################################################################
       # Additional "setup_upgrade.sh" if profile includes "upgrade"
