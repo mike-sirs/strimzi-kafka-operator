@@ -218,6 +218,7 @@ jobs:
         # TODO - set Kafka version globally?
         if: ${{ !contains(env.PROFILE, 'upgrade') }}
         run: |
+          eval $(minikube docker-env)
           export CONNECT_IMAGE="${DOCKER_REGISTRY}/${DOCKER_ORG}/connect-file-sink:latest"
           export KAFKA_VERSION=$([[ "${KAFKA_VERSION}" == *"latest"* ]] && yq eval '.[] | select(.default) | .version' kafka-versions.yaml || echo "${KAFKA_VERSION}")
           BASE_IMAGE="${DOCKER_REGISTRY}/${DOCKER_ORG}/kafka:${DOCKER_TAG}-kafka-${KAFKA_VERSION}"
