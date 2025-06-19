@@ -47,7 +47,7 @@ runs:
     # This is for loading images into external registry
     - name: Load & push Strimzi images external registry
       shell: bash
-      if: ${{ !contains(inputs.registry, 'external') }}
+      if: ${{ contains(inputs.registry, 'external') }}
       run: |
         make docker_load docker_tag docker_push docker_delete_archive
       env:
