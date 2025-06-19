@@ -14,18 +14,18 @@ inputs:
     description: "Architecture"
     required: false
     default: "amd64"
-  cpu:
-    description: "CPU configuration for Minikube"
-    required: false
-    default: "2"
-  memory:
-    description: "Memory configuration for Minikube"
-    required: false
-    default: "6000"
-  retries:
-    description: "Number of retries"
-    required: false
-    default: "3"
+#  cpu:
+#    description: "CPU configuration for Minikube"
+#    required: false
+#    default: "2"
+#  memory:
+#    description: "Memory configuration for Minikube"
+#    required: false
+#    default: "6000"
+#  retries:
+#    description: "Number of retries"
+#    required: false
+#    default: "3"
   registry:
     description: "Image used for Minikube Registry"
     required: false
@@ -82,8 +82,8 @@ runs:
         TEST_KUBECTL_VERSION: ${{ inputs.kubectlVersion }}
         TEST_MINIKUBE_VERSION: ${{ inputs.minikubeVersion }}
         REGISTRY_IMAGE: ${{ inputs.registry }}
-        MINIKUBE_MEMORY: ${{ inputs.memory }}
-        MINIKUBE_CPU: ${{ inputs.cpu }}
+#        MINIKUBE_MEMORY: ${{ inputs.memory }}
+#        MINIKUBE_CPU: ${{ inputs.cpu }}
         RETRIES: ${{ inputs.retries }}
 
     - name: Set DOCKER_REGISTRY
