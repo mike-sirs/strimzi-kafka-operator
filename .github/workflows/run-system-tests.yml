@@ -280,7 +280,7 @@ jobs:
           BRIDGE_IMAGE: "latest-released"
           DOCKER_REGISTRY: ${{ env.DOCKER_REGISTRY }}
           BUILD_ID: ${{ matrix.config.agent }}-${{ matrix.config.pipeline }}-${{ matrix.config.profile }}-systemtests
-          RESOURCE_ALLOCATION_STRATEGY: "SHARE_MEMORY_FOR_ALL_COMPONENTS"
+          RESOURCE_ALLOCATION_STRATEGY: "NOT_SHARED"
           TEST_LOG_DIR: "systemtest-logs"
           CONNECT_IMAGE_WITH_FILE_SINK_PLUGIN: ${{ env.CONNECT_IMAGE_WITH_FILE_SINK_PLUGIN }}
 
