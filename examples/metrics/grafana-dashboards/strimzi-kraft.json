@@ -512,7 +512,7 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(jvm_memory_used_bytes{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_name=\"$strimzi_cluster_name-kafka\"}) by (kubernetes_pod_name)",
+          "expr": "sum(jvm_memory_used_bytes{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_cluster=\"$strimzi_cluster_name\"}) by (kubernetes_pod_name)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{kubernetes_pod_name}}",
@@ -602,7 +602,7 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(rate(jvm_gc_collection_seconds_sum{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_name=\"$strimzi_cluster_name-kafka\"}[5m])) by (kubernetes_pod_name)",
+          "expr": "sum(rate(jvm_gc_collection_seconds_sum{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_cluster=\"$strimzi_cluster_name\"}[5m])) by (kubernetes_pod_name)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{kubernetes_pod_name}}",
@@ -692,7 +692,7 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(rate(jvm_gc_collection_seconds_count{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_name=\"$strimzi_cluster_name-kafka\"}[5m])) by (kubernetes_pod_name)",
+          "expr": "sum(rate(jvm_gc_collection_seconds_count{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_cluster=\"$strimzi_cluster_name\"}[5m])) by (kubernetes_pod_name)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{kubernetes_pod_name}}",
@@ -783,7 +783,7 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(jvm_threads_current{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_name=\"$strimzi_cluster_name-kafka\"}) by (kubernetes_pod_name)",
+          "expr": "sum(jvm_threads_current{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_cluster=\"$strimzi_cluster_name\"}) by (kubernetes_pod_name)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{kubernetes_pod_name}}",
@@ -968,7 +968,7 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(kafka_server_raftmetrics_fetch_records_rate{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_name=\"$strimzi_cluster_name-kafka\"}) by (kubernetes_pod_name)",
+          "expr": "sum(kafka_server_raftmetrics_fetch_records_rate{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_cluster=\"$strimzi_cluster_name\"}) by (kubernetes_pod_name)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -1891,7 +1891,7 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(kafka_server_raftmetrics_high_watermark{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_name=\"$strimzi_cluster_name-kafka\"}) by (kubernetes_pod_name)",
+          "expr": "sum(kafka_server_raftmetrics_high_watermark{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_cluster=\"$strimzi_cluster_name\"}) by (kubernetes_pod_name)",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1984,7 +1984,7 @@
       "targets": [
         {
           "datasource": "${DS_PROMETHEUS}",
-          "expr": "sum(kafka_server_raftmetrics_log_end_offset{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_name=\"$strimzi_cluster_name-kafka\"}) by (kubernetes_pod_name)",
+          "expr": "sum(kafka_server_raftmetrics_log_end_offset{namespace=\"$kubernetes_namespace\",kubernetes_pod_name=~\"$strimzi_cluster_name-$kraft_node\",strimzi_io_cluster=\"$strimzi_cluster_name\"}) by (kubernetes_pod_name)",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1999,11 +1999,7 @@
   ],
   "refresh": "5s",
   "schemaVersion": 39,
-  "tags": [
-    "Strimzi",
-    "Kafka",
-    "KRaft"
-  ],
+  "tags": ["Strimzi", "Kafka", "KRaft"],
   "templating": {
     "list": [
       {
@@ -2101,17 +2097,7 @@
       "2h",
       "1d"
     ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "",
   "title": "Strimzi KRaft",
